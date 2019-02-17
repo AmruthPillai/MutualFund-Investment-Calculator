@@ -1,0 +1,30 @@
+<button class="btn btn-sm btn-light d-flex align-items-center" (click)="open(content)">
+  <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" /></svg>
+  <span>More Info</span>
+</button>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title" id="modal-basic-title">Information on the Calculator</h6>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col col-md-10 mx-auto text-justify">
+        <p>This calculator uses a sample dataset from AMFI of the mutual fund <i>Aditya Birla Sun Life Tax Relief '96 -
+            Growth Regular Option</i> as the entire mutual fund NAV history dataset is rather large (>4 GB) on a NoSQL
+          database.</p>
+
+        <p>This is a sample excerpt of how the data looks:</p>
+        <pre class="p-4">{{ fundData | json }}</pre>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="modal.close()">OK</button>
+  </div>
+</ng-template>

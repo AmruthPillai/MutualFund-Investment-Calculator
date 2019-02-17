@@ -12,11 +12,13 @@ import * as exporting from 'highcharts/modules/exporting.src';
 // Components
 import { AppComponent } from './app.component';
 import { CalculatorComponent } from './components/calculator/calculator.component';
+import { InformationComponent } from './components/information/information.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    InformationComponent
   ],
   imports: [
     BrowserModule,
