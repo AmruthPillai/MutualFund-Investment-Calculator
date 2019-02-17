@@ -29,7 +29,6 @@ export class CalculatorComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
-
   finance: Finance;
   tableData;
   fundData: Array<DataPoint>;
@@ -72,9 +71,10 @@ export class CalculatorComponent implements OnInit {
         units += (this.amount / Number(data[0].nav));
         resultData.push(...this.processDataForChart(data, units));
 
-
-        this.displayChart(resultData);
-        this.calculateInvestmentVsReturns(netInvestment, this.peek(resultData)[1]);
+        if (i === nbMonths - 1) {
+          this.displayChart(resultData);
+          this.calculateInvestmentVsReturns(netInvestment, this.peek(resultData)[1]);
+        }
       });
     }
   }
