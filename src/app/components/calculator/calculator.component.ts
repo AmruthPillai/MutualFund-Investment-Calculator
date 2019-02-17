@@ -72,10 +72,9 @@ export class CalculatorComponent implements OnInit {
         units += (this.amount / Number(data[0].nav));
         resultData.push(...this.processDataForChart(data, units));
 
-        if (i === nbMonths - 1) {
-          this.displayChart(resultData);
-          this.calculateInvestmentVsReturns(netInvestment, this.peek(resultData)[1]);
-        }
+
+        this.displayChart(resultData);
+        this.calculateInvestmentVsReturns(netInvestment, this.peek(resultData)[1]);
       });
     }
   }
@@ -210,7 +209,7 @@ export class CalculatorComponent implements OnInit {
 
   calculateCAGR(data) {
     const nbMonths = moment(this.endDate).diff(moment(this.startDate), 'months', false);
-    this.cagr = this.finance.CAGR(data[0][1], this.peek(data)[1], nbMonths);
+    this.cagr = this.finance.CAGR(this.netInvestment, this.peek(data)[1], nbMonths);
   }
 
   calculateXIRR(data) {
