@@ -65,7 +65,7 @@ export class CalculatorComponent implements OnInit {
       netInvestment += this.amount;
 
       this.filterDataOnDateRange(tempStartDate, tempEndDate).then((data: Array<DataPoint>) => {
-        units += this.amount / Number(data[0].nav);
+        units += (this.amount / Number(data[0].nav));
         balanceBF = this.peek(resultData);
         resultData.push(...this.processDataForChart(data, units, balanceBF));
 
@@ -132,10 +132,10 @@ export class CalculatorComponent implements OnInit {
     });
   }
 
-  processDataForChart(arr: Array<DataPoint>, units: number, balanceBF?: number): Array<Array<string>> {
+  processDataForChart(arr: Array<DataPoint>, units: number, balanceBF?: number): Array<Array<any>> {
     return arr.map((x) => {
       const date = new Date(x.timestamp.$date).getTime();
-      const val = (x.nav * units) + (balanceBF ? balanceBF[1] : 0);
+      const val = x.nav * units;
       return [date, val, units, x.nav];
     });
   }
