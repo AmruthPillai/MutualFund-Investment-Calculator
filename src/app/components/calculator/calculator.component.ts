@@ -34,10 +34,12 @@ export class CalculatorComponent implements OnInit {
   fundData: Array<DataPoint>;
   chart: Chart;
 
-  balanceBF = 0;
   absoluteReturns = 0;
   cagr = 0;
   xirr = 0;
+
+  investment = 0;
+  returns = 0;
 
   constructor(private http: HttpClient) { }
 
@@ -47,30 +49,45 @@ export class CalculatorComponent implements OnInit {
   }
 
   calculateSIP() {
+    console.log(this.peek(this.fundData));
+
+    let netInvestment = 0;
+
     const resultData = [];
     const nbMonths = moment(this.endDate).diff(moment(this.startDate), 'months', false);
 
     let units = 0;
+    let balanceBF = 0;
     for (let i = 0; i < nbMonths; i++) {
       const tempStartDate = new Date(moment(this.startDate).add(i, 'months').format());
       const tempEndDate = new Date(moment(this.startDate).add(i + 1, 'months').format());
 
+      netInvestment += this.amount;
+
       this.filterDataOnDateRange(tempStartDate, tempEndDate).then((data: Array<DataPoint>) => {
         units += this.amount / Number(data[0].nav);
-        this.balanceBF = this.peek(resultData);
-        resultData.push(...this.processDataForChart(data, units));
+        balanceBF = this.peek(resultData);
+        resultData.push(...this.processDataForChart(data, units, balanceBF));
 
-        this.displayChart(resultData);
+        if (i === nbMonths - 1) {
+          this.displayChart(resultData);
+          this.calculateInvestmentVsReturns(netInvestment, this.peek(resultData)[1]);
+        }
       });
     }
   }
 
   calculateLumpsum() {
+    console.log(this.peek(this.fundData));
+
+    let resultData: Array<Array<string>> = null;
+
     this.filterDataOnDateRange(this.startDate, this.endDate).then((data: Array<DataPoint>) => {
       const units = this.amount / Number(data[0].nav);
-      const resultData: Array<Array<string>> = this.processDataForChart(data, units);
+      resultData = this.processDataForChart(data, units);
 
       this.displayChart(resultData);
+      this.calculateInvestmentVsReturns(this.amount, this.peek(resultData)[1]);
     });
   }
 
@@ -115,10 +132,10 @@ export class CalculatorComponent implements OnInit {
     });
   }
 
-  processDataForChart(arr: Array<DataPoint>, units: number): Array<Array<string>> {
+  processDataForChart(arr: Array<DataPoint>, units: number, balanceBF?: number): Array<Array<string>> {
     return arr.map((x) => {
       const date = new Date(x.timestamp.$date).getTime();
-      const val = (x.nav * units) + (this.balanceBF ? this.balanceBF[1] : 0);
+      const val = (x.nav * units) + (balanceBF ? balanceBF[1] : 0);
       return [date, val, units, x.nav];
     });
   }
@@ -203,6 +220,14 @@ export class CalculatorComponent implements OnInit {
     } catch (error) {
       this.xirr = 0;
     }
+  }
+
+  calculateInvestmentVsReturns(netInvestment, netWorth) {
+    this.returns = netWorth - netInvestment;
+
+    console.log('netInvestment', netInvestment);
+    console.log('netWorth', netWorth);
+    console.log('returns', this.returns);
   }
 
   peek(array) {
