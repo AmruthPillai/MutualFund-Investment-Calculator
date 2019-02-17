@@ -29,6 +29,7 @@ export class CalculatorComponent implements OnInit {
   startDate: Date;
   endDate: Date;
 
+
   finance: Finance;
   tableData;
   fundData: Array<DataPoint>;
@@ -38,8 +39,10 @@ export class CalculatorComponent implements OnInit {
   cagr = 0;
   xirr = 0;
 
-  investment = 0;
+  ifSIP: boolean;
+  netInvestment = 0;
   returns = 0;
+  period = 0;
 
   constructor(private http: HttpClient) { }
 
@@ -49,15 +52,13 @@ export class CalculatorComponent implements OnInit {
   }
 
   calculateSIP() {
-    console.log(this.peek(this.fundData));
-
+    this.ifSIP = true;
     let netInvestment = 0;
 
     const resultData = [];
     const nbMonths = moment(this.endDate).diff(moment(this.startDate), 'months', false);
 
     let units = 0;
-    let balanceBF = 0;
     for (let i = 0; i < nbMonths; i++) {
       const tempStartDate = new Date(moment(this.startDate).add(i, 'months').format());
       const tempEndDate = new Date(moment(this.startDate).add(i + 1, 'months').format());
@@ -66,8 +67,7 @@ export class CalculatorComponent implements OnInit {
 
       this.filterDataOnDateRange(tempStartDate, tempEndDate).then((data: Array<DataPoint>) => {
         units += (this.amount / Number(data[0].nav));
-        balanceBF = this.peek(resultData);
-        resultData.push(...this.processDataForChart(data, units, balanceBF));
+        resultData.push(...this.processDataForChart(data, units));
 
         if (i === nbMonths - 1) {
           this.displayChart(resultData);
@@ -78,9 +78,8 @@ export class CalculatorComponent implements OnInit {
   }
 
   calculateLumpsum() {
-    console.log(this.peek(this.fundData));
-
-    let resultData: Array<Array<string>> = null;
+    this.ifSIP = false;
+    let resultData: Array<Array<any>> = null;
 
     this.filterDataOnDateRange(this.startDate, this.endDate).then((data: Array<DataPoint>) => {
       const units = this.amount / Number(data[0].nav);
@@ -132,7 +131,7 @@ export class CalculatorComponent implements OnInit {
     });
   }
 
-  processDataForChart(arr: Array<DataPoint>, units: number, balanceBF?: number): Array<Array<any>> {
+  processDataForChart(arr: Array<DataPoint>, units: number): Array<Array<any>> {
     return arr.map((x) => {
       const date = new Date(x.timestamp.$date).getTime();
       const val = x.nav * units;
@@ -187,7 +186,7 @@ export class CalculatorComponent implements OnInit {
     });
   }
 
-  generateTableData(resultData: Array<Array<string>>) {
+  generateTableData(resultData: Array<Array<any>>) {
     this.calculateAbsReturns(resultData[0][3], this.peek(resultData)[3]);
     this.calculateCAGR(resultData);
     this.calculateXIRR(resultData);
@@ -223,11 +222,14 @@ export class CalculatorComponent implements OnInit {
   }
 
   calculateInvestmentVsReturns(netInvestment, netWorth) {
+    this.netInvestment = netInvestment;
+    this.period = moment(this.endDate).diff(moment(this.startDate), 'months', false);
     this.returns = netWorth - netInvestment;
 
     console.log('netInvestment', netInvestment);
     console.log('netWorth', netWorth);
     console.log('returns', this.returns);
+    console.log('period', this.period);
   }
 
   peek(array) {

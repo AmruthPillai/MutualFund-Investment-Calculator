@@ -66,6 +66,26 @@
   </div>
 </form>
 
+<!-- Summary -->
+<div class="py-4" *ngIf="this.returns">
+  <h6 class="small font-weight-bold text-uppercase text-muted">Investment Summary</h6>
+  <ng-container *ngIf="ifSIP; else elseLumpsumTemplate">
+    <h4 class="lead">If you had invested {{ this.netInvestment / this.period | currency:'INR' }} monthly for a period
+      of {{ period }} months,<br>
+      then its net worth today would be {{ this.netInvestment + this.returns | currency:'INR' }}<br>
+      with a <span [class.text-success]="this.returns > 0" [class.text-danger]="this.returns < 0">
+        {{ this.returns > 0 ? 'profit' : 'loss' }}</span> of
+      {{ (this.returns > 0 ? this.returns : -(this.returns)) | currency:'INR' }}.</h4>
+  </ng-container>
+  <ng-template #elseLumpsumTemplate>
+    <h4 class="lead">If you had invested {{ this.netInvestment | currency:'INR' }}, {{ period }} months ago,<br>
+      then its net worth today would be {{ this.netInvestment + this.returns | currency:'INR' }}<br>
+      with a <span [class.text-success]="this.returns > 0" [class.text-danger]="this.returns < 0">
+        {{ this.returns > 0 ? 'profit' : 'loss' }}</span> of
+      {{ (this.returns > 0 ? this.returns : -(this.returns)) | currency:'INR' }}.</h4>
+  </ng-template>
+</div>
+
 <!-- Chart -->
 <div class="py-4" [chart]="chart"></div>
 
@@ -76,9 +96,9 @@
     <h3 class="font-weight-light">{{ absoluteReturns | percent:'1.2' }}</h3>
   </div>
   <div class="col-md py-2 text-center" *ngIf="cagr">
-      <h6 class="small font-weight-bold text-uppercase text-muted">CAGR</h6>
-      <h3 class="font-weight-light">{{ cagr | percent:'1.2' }}</h3>
-    </div>
+    <h6 class="small font-weight-bold text-uppercase text-muted">CAGR</h6>
+    <h3 class="font-weight-light">{{ cagr | percent:'1.2' }}</h3>
+  </div>
   <div class="col-md py-2 text-center" *ngIf="xirr">
     <h6 class="small font-weight-bold text-uppercase text-muted">XIRR</h6>
     <h3 class="font-weight-light">{{ xirr + '%' }}</h3>
