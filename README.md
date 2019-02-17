@@ -4,7 +4,10 @@ This is one of the most complex projects/problems I have worked on, yet. It invo
 
 In it's simplest form, it is a mutual fund investment calculator which allows you to **track your SIP (monthly) and Lumpsum investments** and using **real historical NAV data from AMFI**, to track the performance of the fund over time.
 
-# The Tech
+## The Screenshot
+<img src="https://i.imgur.com/bP7SDDx.png" alt="Screenshot of Mutual Fund Investment Calculator" width="500px" />
+
+## The Tech
 * Angular v7.2.0
 * Bootstrap v4.3
 * [ng-bootstrap](https://ng-bootstrap.github.io/#/home)
