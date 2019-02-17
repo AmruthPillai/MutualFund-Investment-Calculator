@@ -5,7 +5,9 @@ import { NgModule } from '@angular/core';
 
 // Modules
 import { BootstrapModule } from './modules/bootstrap/bootstrap.module';
-import { ChartModule } from 'angular-highcharts';
+import { ChartModule, HIGHCHARTS_MODULES } from 'angular-highcharts';
+import * as more from 'highcharts/highcharts-more.src';
+import * as exporting from 'highcharts/modules/exporting.src';
 
 // Components
 import { AppComponent } from './app.component';
@@ -23,7 +25,9 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
     HttpClientModule,
     ChartModule
   ],
-  providers: [],
+  providers: [
+    { provide: HIGHCHARTS_MODULES, useFactory: () => [ more, exporting ] }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

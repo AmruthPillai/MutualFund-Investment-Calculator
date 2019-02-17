@@ -6,6 +6,7 @@ import { NgbDateAdapter, NgbDateNativeAdapter } from '@ng-bootstrap/ng-bootstrap
 import { Chart } from 'angular-highcharts';
 import { Finance } from 'financejs';
 import * as moment from 'moment';
+import * as Highcharts from 'highcharts';
 
 export class DataPoint {
   'scheme_name': string;
@@ -19,7 +20,7 @@ export class DataPoint {
   selector: 'app-calculator',
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.scss'],
-  providers: [{provide: NgbDateAdapter, useClass: NgbDateNativeAdapter}]
+  providers: [{ provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }]
 })
 export class CalculatorComponent implements OnInit {
 
@@ -125,6 +126,12 @@ export class CalculatorComponent implements OnInit {
   displayChart(resultData: Array<any>) {
     this.generateTableData(resultData);
 
+    Highcharts.setOptions({
+      lang: {
+        thousandsSep: ','
+      }
+    });
+
     this.chart = new Chart({
       chart: {
         type: 'line',
@@ -138,7 +145,16 @@ export class CalculatorComponent implements OnInit {
       },
       yAxis: {
         title: {
-          text: 'Net Asset Value'
+          text: 'Investment Value'
+        }
+      },
+      exporting: {
+        enabled: true
+      },
+      tooltip: {
+        formatter() {
+          return 'Investment Value: <b>₹' + Highcharts.numberFormat(this.y, 2, '.', ',') + '</b><br/>' +
+            'as of <b>' + moment(this.x).fromNow() + '</b>';
         }
       },
       credits: {
