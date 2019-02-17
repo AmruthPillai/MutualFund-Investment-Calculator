@@ -1,0 +1,106 @@
+<div class="pb-4">
+  <h2>Mutual Fund Investment Calculator</h2>
+</div>
+
+<form #f="ngForm">
+  <!-- Amount -->
+  <div class="row py-2">
+    <div class="col">
+      <div class="form-group">
+        <label for="amount" class="small">Amount</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">₹</span>
+          </div>
+          <input type="number" class="form-control" id="amount" name="amount" [(ngModel)]="amount" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dates -->
+  <div class="row py-2">
+    <div class="col-md">
+      <div class="form-group">
+        <label for="startDate" class="small">Start Date</label>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="yyyy-mm-dd" id="startDate" name="startDate" [(ngModel)]="startDate"
+            ngbDatepicker #start="ngbDatepicker" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="start.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="form-group">
+        <label for="endDate" class="small">End Date</label>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="yyyy-mm-dd" id="endDate" name="endDate" [(ngModel)]="endDate"
+            ngbDatepicker #end="ngbDatepicker" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="end.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Date Selector -->
+  <div class="row py-2">
+    <div class="col small d-flex flex-wrap align-items-center justify-content-center">
+      <span>Quick Date Selector:</span>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(1)">1mnth</a>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(3)">3mnths</a>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(6)">6mnths</a>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(12)">1yr</a>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(36)">3yrs</a>
+      <a href="#" class="btn btn-sm btn-link mx-2" (click)="quickDateSelect(60)">5yrs</a>
+    </div>
+  </div>
+
+  <!-- Calculate Buttons -->
+  <div class="btn-group btn-block py-4">
+    <button class="btn btn-primary btn-sm" (click)="calculateSIP()" [disabled]="!f.valid">Calculate SIP</button>
+    <button class="btn btn-danger btn-sm" (click)="calculateLumpsum()" [disabled]="!f.valid">Calculate Lumpsum</button>
+  </div>
+</form>
+
+<!-- Chart -->
+<div class="py-4" [chart]="chart"></div>
+
+<!-- Metrics -->
+<div id="metrics" class="row">
+  <div class="col-md py-2 text-center" *ngIf="absoluteReturns">
+    <h6 class="small font-weight-bold text-uppercase text-muted">Absolute Returns</h6>
+    <h3 class="font-weight-light">{{ absoluteReturns | percent:'1.2' }}</h3>
+  </div>
+  <div class="col-md py-2 text-center" *ngIf="cagr">
+      <h6 class="small font-weight-bold text-uppercase text-muted">CAGR</h6>
+      <h3 class="font-weight-light">{{ cagr | percent:'1.2' }}</h3>
+    </div>
+  <div class="col-md py-2 text-center" *ngIf="xirr">
+    <h6 class="small font-weight-bold text-uppercase text-muted">XIRR</h6>
+    <h3 class="font-weight-light">{{ xirr + '%' }}</h3>
+  </div>
+</div>
+
+<!-- Investment Tracker -->
+<div class="table-responsive">
+  <table class="w-100 table table-bordered table-hover my-5" *ngIf="tableData">
+    <thead class="thead-dark">
+      <th>Date</th>
+      <th>Investment Amount</th>
+      <th>Units Alotted</th>
+      <th>NAV (as of date)</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of tableData">
+        <td>{{ data[0] | date }}</td>
+        <td>{{ data[1] | currency:'INR' }}</td>
+        <td>{{ data[2] | number }}</td>
+        <td>{{ data[3] | number }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
