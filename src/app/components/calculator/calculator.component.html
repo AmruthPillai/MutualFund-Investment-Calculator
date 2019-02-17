@@ -3,6 +3,19 @@
 </div>
 
 <form #f="ngForm">
+  <!-- Mutual Fund -->
+  <div class="row py-2">
+    <div class="col">
+      <div class="form-group">
+        <label for="schemeName" class="small">Mutual Fund Scheme Name</label>
+        <input type="text" class="form-control" id="schemeName" name="schemeName" [(ngModel)]="schemeName" disabled
+          required>
+        <small class="small text-muted float-left py-2">Click on <strong>more info</strong> on the top-right to know
+          why other mutual funds are not available yet.</small>
+      </div>
+    </div>
+  </div>
+
   <!-- Amount -->
   <div class="row py-2">
     <div class="col">
@@ -69,7 +82,7 @@
 <!-- Summary -->
 <div class="py-4" *ngIf="this.returns">
   <h6 class="small font-weight-bold text-uppercase text-muted">Investment Summary</h6>
-  <ng-container *ngIf="ifSIP; else elseLumpsumTemplate">
+  <ng-container *ngIf="isSIP; else elseLumpsumTemplate">
     <h4 class="lead">If you had invested {{ this.netInvestment / this.period | currency:'INR' }} monthly for a period
       of {{ period }} months,<br>
       then its net worth today would be {{ this.netInvestment + this.returns | currency:'INR' }}<br>

@@ -10,7 +10,6 @@ import { HttpClient } from '@angular/common/http';
 export class InformationComponent implements OnInit {
 
   fundData: Array<object>;
-  closeResult: string;
 
   constructor(private modalService: NgbModal, private http: HttpClient) { }
 
@@ -20,8 +19,8 @@ export class InformationComponent implements OnInit {
     });
   }
 
-  open(content) {
-    this.modalService.open(content, { centered: true, size: 'lg' });
+  open(information) {
+    this.modalService.open(information, { centered: true, size: 'lg' });
   }
 
 }

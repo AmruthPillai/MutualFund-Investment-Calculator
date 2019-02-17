@@ -24,7 +24,7 @@ export class DataPoint {
 })
 export class CalculatorComponent implements OnInit {
 
-  fundName = 'Aditya Birla Sun Life Tax Relief \'96';
+  schemeName: string;
   amount: number;
   startDate: Date;
   endDate: Date;
@@ -39,7 +39,7 @@ export class CalculatorComponent implements OnInit {
   cagr = 0;
   xirr = 0;
 
-  ifSIP: boolean;
+  isSIP = false;
   netInvestment = 0;
   returns = 0;
   period = 0;
@@ -48,11 +48,14 @@ export class CalculatorComponent implements OnInit {
 
   ngOnInit() {
     this.finance = new Finance();
-    this.http.get('assets/data.json').subscribe((data: Array<DataPoint>) => this.fundData = data);
+    this.http.get('assets/data.json').subscribe((data: Array<DataPoint>) => {
+      this.fundData = data;
+      this.schemeName = data[0].scheme_name;
+    });
   }
 
   calculateSIP() {
-    this.ifSIP = true;
+    this.isSIP = true;
     let netInvestment = 0;
 
     const resultData = [];
@@ -78,7 +81,7 @@ export class CalculatorComponent implements OnInit {
   }
 
   calculateLumpsum() {
-    this.ifSIP = false;
+    this.isSIP = false;
     let resultData: Array<Array<any>> = null;
 
     this.filterDataOnDateRange(this.startDate, this.endDate).then((data: Array<DataPoint>) => {
@@ -178,7 +181,7 @@ export class CalculatorComponent implements OnInit {
       },
       series: [
         {
-          name: this.fundName,
+          name: this.schemeName,
           type: 'line',
           data: resultData
         }
@@ -225,11 +228,6 @@ export class CalculatorComponent implements OnInit {
     this.netInvestment = netInvestment;
     this.period = moment(this.endDate).diff(moment(this.startDate), 'months', false);
     this.returns = netWorth - netInvestment;
-
-    console.log('netInvestment', netInvestment);
-    console.log('netWorth', netWorth);
-    console.log('returns', this.returns);
-    console.log('period', this.period);
   }
 
   peek(array) {
