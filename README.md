@@ -11,7 +11,8 @@ You can check out the live demo of the application over here:
 
 ## Screenshot
 
-<img src="https://i.imgur.com/OxFkVnY.png" alt="Screenshot of Mutual Fund Investment Calculator" width="400px" />
+<img src="https://i.imgur.com/6JtvzIo.png" alt="Screenshot of Mutual Fund Investment Calculator" width="300px" />
+<img src="https://i.imgur.com/XPNkxGK.png" alt="Screenshot of Mutual Fund Investment Calculator" width="300px" />
 
 ## About the Data
 
